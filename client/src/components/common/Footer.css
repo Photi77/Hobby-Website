@@ -1,0 +1,190 @@
+/* client/src/components/layout/Footer.css */
+.footer {
+  background-color: var(--dark-color);
+  color: #fff;
+  padding: 2rem 0;
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.footer-logo i {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+
+.footer-description {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #ccc;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.footer-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 1rem 0;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-copyright {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.footer-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-social a {
+  color: #fff;
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.footer-social a:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+/* フッターサブスクリプション（ニュースレター登録）セクション */
+.footer-subscribe {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.footer-subscribe h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.footer-subscribe p {
+  margin-bottom: 1rem;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.footer-subscribe-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer-subscribe-form input {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.footer-subscribe-form button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0 1.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.footer-subscribe-form button:hover {
+  background-color: #2980b9;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .footer-content {
+    padding: 0 1rem;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .footer-copyright {
+    text-align: center;
+  }
+  
+  .footer-subscribe-form {
+    flex-direction: column;
+  }
+  
+  .footer-subscribe-form button {
+    padding: 0.75rem;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .footer {
+    background-color: #1a1a1a;
+  }
+  
+  .footer-links a:hover {
+    color: #3498db; /* ダークモードでのホバー色 */
+  }
+  
+  .footer-social a:hover {
+    background-color: #3498db;
+  }
+  
+  .footer-subscribe-form button:hover {
+    background-color: #3498db;
+  }
+}

@@ -1,0 +1,278 @@
+/* client/src/components/common/Spinner.css */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 200px;
+}
+
+/* フルページスピナー（画面全体をカバー） */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .spinner-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* 標準的な円形スピナー */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--primary-color);
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+/* サイズバリエーション */
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.spinner-lg {
+  width: 60px;
+  height: 60px;
+  border-width: 4px;
+}
+
+/* カラーバリエーション */
+.spinner-primary {
+  border-top-color: var(--primary-color);
+}
+
+.spinner-secondary {
+  border-top-color: var(--secondary-color);
+}
+
+.spinner-success {
+  border-top-color: var(--success-color);
+}
+
+.spinner-danger {
+  border-top-color: var(--danger-color);
+}
+
+.spinner-warning {
+  border-top-color: #f39c12;
+}
+
+.spinner-light {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #f8f9fa;
+}
+
+.spinner-dark {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #343a40;
+}
+
+/* テキスト付きスピナー */
+.spinner-with-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner-text {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  animation: fade-in-out 1.5s ease-in-out infinite;
+}
+
+/* インラインスピナー（テキスト内など） */
+.spinner-inline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* ボタン内のスピナー */
+.btn .spinner-inline {
+  margin-right: 0.5rem;
+}
+
+/* パルススピナー（拍動するもの） */
+.spinner-pulse {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  animation: spinner-pulse 1.2s ease-in-out infinite;
+}
+
+/* 複数の点によるスピナー */
+.spinner-dots {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.spinner-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+.spinner-dot:nth-child(1) {
+  animation: spinner-dot-jump 1.2s ease-in-out -0.4s infinite;
+}
+
+.spinner-dot:nth-child(2) {
+  animation: spinner-dot-jump 1.2s ease-in-out -0.2s infinite;
+}
+
+.spinner-dot:nth-child(3) {
+  animation: spinner-dot-jump 1.2s ease-in-out 0s infinite;
+}
+
+/* プログレスバー */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* 不定のプログレスバー（進行状況が不明な場合） */
+.progress-bar-indeterminate .progress-bar-fill {
+  width: 50%;
+  animation: progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+/* 円形プログレスバー */
+.circle-progress {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.circle-progress-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid #f0f0f0;
+}
+
+.circle-progress-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: var(--primary-color);
+  border-right-color: var(--primary-color);
+}
+
+.circle-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* アニメーション */
+@keyframes spinner-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-pulse {
+  0%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}
+
+@keyframes spinner-dot-jump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fade-in-out {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* ダークモード対応の追加スタイル */
+@media (prefers-color-scheme: dark) {
+  .spinner {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .spinner-light {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-top-color: #f8f9fa;
+  }
+  
+  .spinner-text {
+    color: #ccc;
+  }
+  
+  .progress-bar {
+    background-color: #444;
+  }
+  
+  .circle-progress-circle {
+    border-color: #444;
+  }
+}

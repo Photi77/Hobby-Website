@@ -1,0 +1,198 @@
+/* client/src/components/layout/Alert.css */
+.alert {
+  padding: 0.8rem 1.2rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+.alert:hover {
+  opacity: 1;
+}
+
+.alert-primary {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-left: 5px solid #2069a1;
+}
+
+.alert-secondary {
+  background-color: var(--secondary-color);
+  color: #fff;
+  border-left: 5px solid #25a25a;
+}
+
+.alert-success {
+  background-color: var(--success-color);
+  color: #fff;
+  border-left: 5px solid #25a25a;
+}
+
+.alert-danger {
+  background-color: var(--danger-color);
+  color: #fff;
+  border-left: 5px solid #c0392b;
+}
+
+.alert-warning {
+  background-color: #f39c12;
+  color: #fff;
+  border-left: 5px solid #d35400;
+}
+
+.alert-info {
+  background-color: #3498db;
+  color: #fff;
+  border-left: 5px solid #2980b9;
+}
+
+.alert-light {
+  background-color: #f8f9fa;
+  color: #333;
+  border-left: 5px solid #ddd;
+}
+
+.alert-dark {
+  background-color: var(--dark-color);
+  color: #fff;
+  border-left: 5px solid #1c2833;
+}
+
+.alert i {
+  margin-right: 0.5rem;
+}
+
+.alert-dismissible {
+  padding-right: 3rem;
+}
+
+.alert-dismissible .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.8rem 1.2rem;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: opacity 0.2s;
+}
+
+.alert-dismissible .close:hover {
+  opacity: 0.8;
+}
+
+/* アラート表示・非表示のアニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 0.95;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.95;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.alert-enter {
+  animation: fadeIn 0.3s forwards;
+}
+
+.alert-exit {
+  animation: fadeOut 0.3s forwards;
+}
+
+/* フローティングアラート（トースト通知用） */
+.floating-alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  min-width: 280px;
+  max-width: 450px;
+}
+
+/* アラートグループ（複数アラート用） */
+.alert-group {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 450px;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 768px) {
+  .floating-alert,
+  .alert-group {
+    left: 20px;
+    right: 20px;
+    max-width: calc(100% - 40px);
+  }
+}
+
+/* アイコン付きアラート */
+.alert-icon {
+  display: flex;
+  align-items: flex-start;
+}
+
+.alert-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.alert-primary .alert-icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.alert-success .alert-icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.alert-danger .alert-icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.alert-warning .alert-icon-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.alert-content {
+  flex-grow: 1;
+}
+
+.alert-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.alert-message {
+  margin: 0;
+}

@@ -1,0 +1,168 @@
+.dashboard {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.dashboard-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.dashboard-section {
+  margin-bottom: 3rem;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.dashboard-section-header h2 {
+  color: var(--dark-color);
+  font-size: 1.5rem;
+}
+
+.dashboard-view-all {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.dashboard-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.dashboard-empty .btn {
+  margin-top: 1rem;
+}
+
+.dashboard-hobby-grid, .dashboard-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-hobby-card, .dashboard-tool-card {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 1.2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-hobby-card:hover, .dashboard-tool-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-hobby-header, .dashboard-tool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.dashboard-hobby-header h3, .dashboard-tool-header h3 {
+  font-size: 1.2rem;
+  color: var(--dark-color);
+}
+
+.hobby-visibility, .tool-visibility {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+}
+
+.hobby-visibility.public, .tool-visibility.public {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.hobby-visibility.private, .tool-visibility.private {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.dashboard-hobby-category {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-hobby-description, .dashboard-tool-description {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.dashboard-hobby-link, .dashboard-tool-link {
+  display: inline-block;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.dashboard-hobby-link:hover, .dashboard-tool-link:hover {
+  text-decoration: underline;
+}
+
+.dashboard-tool-image {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dashboard-tool-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashboard-tool-no-image {
+  color: #aaa;
+  font-size: 3rem;
+}
+
+.dashboard-tool-hobby {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-hobby-grid, .dashboard-tool-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-actions {
+    flex-direction: column;
+  }
+}

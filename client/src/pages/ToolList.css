@@ -1,0 +1,180 @@
+
+.tool-list-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.tool-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.tool-list-header h1 {
+  color: var(--primary-color);
+}
+
+.tool-list-filters {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.tool-list-filters label {
+  font-weight: 500;
+  color: #444;
+}
+
+.tool-list-filters select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  min-width: 200px;
+}
+
+.tool-list-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.tool-list-empty .btn {
+  margin-top: 1rem;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.tool-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tool-card-image {
+  height: 200px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tool-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tool-card-no-image {
+  color: #ccc;
+  font-size: 3rem;
+}
+
+.tool-card-content {
+  padding: 1.2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.tool-card-header h3 {
+  font-size: 1.2rem;
+  color: var(--dark-color);
+}
+
+.tool-visibility {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.tool-visibility.public {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.tool-visibility.private {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.tool-card-hobby {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  background-color: #f0f0f0;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.tool-card-brand {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.tool-card-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.tool-card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .tool-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .tool-list-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .tool-list-filters select {
+    width: 100%;
+  }
+  
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
