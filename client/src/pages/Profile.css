@@ -1,4 +1,5 @@
 
+/* client/src/pages/Profile.css - 修正版 */
 .profile-container {
   width: 100%;
   max-width: 800px;
@@ -61,6 +62,7 @@
   align-items: center;
   justify-content: center;
   border: 3px solid var(--primary-color);
+  position: relative;
 }
 
 .profile-image-preview img {
@@ -113,6 +115,21 @@
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
+.input-error {
+  border-color: var(--danger-color) !important;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+}
+
+.form-error {
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  display: block;
+}
+
 .form-text {
   display: block;
   margin-top: 0.3rem;
@@ -129,28 +146,13 @@
   font-weight: 500;
 }
 
-/* プロフィール画像のアップロードボタン */
-input[type="file"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-.profile-image-actions label.btn {
-  display: inline-block;
-  cursor: pointer;
+.profile-form button:disabled,
+.password-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /* プロフィール画像のホバーエフェクト */
-.profile-image-preview {
-  position: relative;
-}
-
 .profile-image-preview::after {
   content: '';
   position: absolute;
@@ -161,40 +163,16 @@ input[type="file"] {
   background-color: rgba(0, 0, 0, 0.3);
   opacity: 0;
   transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
 }
 
 .profile-image-preview:hover::after {
   opacity: 1;
-}
-
-/* パスワードの強度表示 */
-.password-strength {
-  margin-top: 0.5rem;
-  height: 5px;
-  background-color: #f0f0f0;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.password-strength-bar {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s, background-color 0.3s;
-}
-
-.password-strength-bar.weak {
-  width: 33%;
-  background-color: var(--danger-color);
-}
-
-.password-strength-bar.medium {
-  width: 66%;
-  background-color: #f39c12;
-}
-
-.password-strength-bar.strong {
-  width: 100%;
-  background-color: var(--success-color);
+  content: '📷';
 }
 
 /* レスポンシブデザイン */
@@ -222,9 +200,8 @@ input[type="file"] {
     align-items: center;
   }
   
-  .profile-image-actions button,
-  .profile-image-actions label {
-    width: 100%;
+  .profile-image-actions button {
+    width: 200px;
     margin-bottom: 0.5rem;
   }
   

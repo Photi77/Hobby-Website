@@ -1,5 +1,5 @@
 
-// client/src/App.js の修正版
+// client/src/App.js - デバッグ版
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -8,7 +8,7 @@ import './App.css';
 // Components
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import Spinner from './components/common/Spinner'; // 必要に応じてこのコンポーネントを作成
+import Spinner from './components/common/Spinner';
 
 // Pages
 import Home from './pages/Home';
@@ -35,15 +35,29 @@ function App() {
   
   // 認証コンテキストが利用可能か確認
   if (!auth) {
-    console.error('Auth context is not available');
+    console.error('App: Auth context is not available');
     return <div>Error: Auth context is not available</div>;
   }
   
-  const { loading } = auth;
+  const { loading, isAuthenticated, user } = auth;
+
+  // デバッグ情報をコンソールに出力
+  console.log('App: Current auth state:', {
+    loading,
+    isAuthenticated,
+    user: user?.username || 'No user'
+  });
 
   if (loading) {
-    return <div className="loading">読み込み中...</div>;
+    console.log('App: Authentication is loading');
+    return (
+      <div className="App">
+        <Spinner text="アプリケーションを読み込み中..." />
+      </div>
+    );
   }
+
+  console.log('App: Rendering application with auth state:', isAuthenticated);
 
   return (
     <div className="App">

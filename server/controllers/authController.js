@@ -1,5 +1,4 @@
-// server/controllers/authController.js の修正
-
+// server/controllers/authController.js - デバッグ版
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
@@ -13,8 +12,18 @@ const generateToken = (id) => {
 // ユーザー登録
 exports.register = async (req, res) => {
   try {
-    console.log('Register API called with data:', req.body);
+    console.log('=== REGISTER API CALLED ===');
+    console.log('Request body:', req.body);
     const { username, email, password } = req.body;
+
+    // 入力バリデーション
+    if (!username || !email || !password) {
+      console.log('Missing required fields');
+      return res.status(400).json({ 
+        success: false, 
+        message: '全ての必須項目を入力してください' 
+      });
+    }
 
     // メールとユーザー名の重複チェック
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -37,23 +46,29 @@ exports.register = async (req, res) => {
 
     // レスポンスにトークンを送信
     const token = generateToken(user._id);
-    res.status(201).json({
+    
+    const responseData = {
       success: true,
       token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        createdAt: user.createdAt
       }
-    });
+    };
+    
+    console.log('Sending register response:', { ...responseData, token: 'TOKEN_HIDDEN' });
+    res.status(201).json(responseData);
 
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({
       success: false,
       message: 'サーバーエラーが発生しました',
-      error: err.message
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   }
 };
@@ -61,48 +76,68 @@ exports.register = async (req, res) => {
 // ログイン
 exports.login = async (req, res) => {
   try {
-    console.log('Login API called with data:', req.body);
+    console.log('=== LOGIN API CALLED ===');
+    console.log('Request body:', { email: req.body.email, password: '***HIDDEN***' });
     const { email, password } = req.body;
+
+    // 入力バリデーション
+    if (!email || !password) {
+      console.log('Missing email or password');
+      return res.status(400).json({ 
+        success: false, 
+        message: 'メールアドレスとパスワードを入力してください' 
+      });
+    }
 
     // メールでユーザーを検索
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found with email:', email);
       return res.status(401).json({ 
         success: false, 
         message: 'メールアドレスまたはパスワードが正しくありません' 
       });
     }
+
+    console.log('User found:', user.username);
 
     // パスワード検証
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
+      console.log('Password does not match for user:', user.username);
       return res.status(401).json({ 
         success: false, 
         message: 'メールアドレスまたはパスワードが正しくありません' 
       });
     }
 
-    console.log('User logged in successfully:', user._id);
+    console.log('Password verified for user:', user.username);
 
     // レスポンスにトークンを送信
     const token = generateToken(user._id);
-    res.status(200).json({
+    
+    const responseData = {
       success: true,
       token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        createdAt: user.createdAt
       }
-    });
+    };
+    
+    console.log('Sending login response:', { ...responseData, token: 'TOKEN_HIDDEN' });
+    res.status(200).json(responseData);
 
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({
       success: false,
       message: 'サーバーエラーが発生しました',
-      error: err.message
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   }
 };
@@ -110,7 +145,8 @@ exports.login = async (req, res) => {
 // 現在のユーザー情報取得
 exports.getMe = async (req, res) => {
   try {
-    console.log('GetMe endpoint called for user ID:', req.user ? req.user.id : 'undefined');
+    console.log('=== GET ME API CALLED ===');
+    console.log('User ID from middleware:', req.user ? req.user.id : 'undefined');
     
     // req.userがある場合（認証ミドルウェアを通過している場合）
     if (!req.user || !req.user.id) {
@@ -132,10 +168,9 @@ exports.getMe = async (req, res) => {
       });
     }
     
-    console.log('User found:', user.username);
+    console.log('User found for getMe:', user.username);
     
-    // 成功レスポンス
-    res.status(200).json({
+    const responseData = {
       success: true,
       user: {
         id: user._id,
@@ -145,25 +180,21 @@ exports.getMe = async (req, res) => {
         bio: user.bio,
         createdAt: user.createdAt
       }
-    });
+    };
+    
+    console.log('Sending getMe response for user:', user.username);
+    res.status(200).json(responseData);
   } catch (err) {
     console.error('GetMe error:', err);
     res.status(500).json({
       success: false,
       message: 'サーバーエラーが発生しました',
-      error: err.message
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   }
 };
 
-// テスト用の情報出力
-console.log('AuthController functions loaded:');
-console.log('- register:', typeof exports.register === 'function' ? 'Function ✓' : 'NOT A FUNCTION ✗');
-console.log('- login:', typeof exports.login === 'function' ? 'Function ✓' : 'NOT A FUNCTION ✗');
-console.log('- getMe:', typeof exports.getMe === 'function' ? 'Function ✓' : 'NOT A FUNCTION ✗');
-
-module.exports = {
-  register: exports.register,
-  login: exports.login,
-  getMe: exports.getMe
-};
+console.log('AuthController loaded with functions:');
+console.log('- register:', typeof exports.register === 'function' ? '✓' : '✗');
+console.log('- login:', typeof exports.login === 'function' ? '✓' : '✗');
+console.log('- getMe:', typeof exports.getMe === 'function' ? '✓' : '✗');

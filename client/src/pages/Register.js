@@ -1,4 +1,4 @@
-// client/src/pages/Register.js の修正版
+// client/src/pages/Register.js - 修正版
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -18,10 +18,12 @@ const Register = () => {
   const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  // 認証済みの場合はダッシュボードへリダイレクト
   useEffect(() => {
-    // ログイン済みの場合はダッシュボードへリダイレクト
+    console.log('Register component: checking authentication status', isAuthenticated);
     if (isAuthenticated) {
-      navigate('/dashboard');
+      console.log('User is already authenticated, redirecting to dashboard');
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -83,23 +85,32 @@ const Register = () => {
     }
     
     setLoading(true);
+    console.log('Attempting registration with username:', username);
 
     try {
-      console.log('Submitting registration data...');
       const registerData = {
         username,
         email,
         password
       };
       
-      // デバッグ用ログ
-      console.log('Registration data:', registerData);
-      
+      console.log('Submitting registration data...');
       const result = await register(registerData);
-      console.log('Registration successful:', result);
+      console.log('Registration result:', result);
       
-      toast.success('登録が完了しました！');
-      navigate('/dashboard');
+      if (result.success) {
+        toast.success('登録が完了しました！');
+        console.log('Registration successful, navigating to dashboard');
+        
+        // 少し遅延させてから遷移（状態更新を確実にするため）
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 100);
+      } else {
+        console.error('Registration failed:', result.message);
+        setErrors({ general: result.message });
+        toast.error(result.message);
+      }
     } catch (err) {
       console.error('Registration error:', err);
       
@@ -108,6 +119,7 @@ const Register = () => {
                            err.message || 
                            '登録に失敗しました';
       
+      setErrors({ general: errorMessage });
       toast.error(errorMessage);
       
       // フィールド固有のエラーハンドリング
@@ -126,6 +138,13 @@ const Register = () => {
         <p className="lead">
           <i className="fas fa-user"></i> 新しいアカウントを作成
         </p>
+        
+        {errors.general && (
+          <div className="alert alert-danger">
+            {errors.general}
+          </div>
+        )}
+        
         <form className="auth-form" onSubmit={onSubmit}>
           <div className="form-group">
             <label htmlFor="username">ユーザー名</label>
@@ -137,9 +156,11 @@ const Register = () => {
               onChange={onChange}
               className={errors.username ? 'input-error' : ''}
               required
+              disabled={loading}
             />
             {errors.username && <div className="form-error">{errors.username}</div>}
           </div>
+          
           <div className="form-group">
             <label htmlFor="email">メールアドレス</label>
             <input
@@ -150,9 +171,11 @@ const Register = () => {
               onChange={onChange}
               className={errors.email ? 'input-error' : ''}
               required
+              disabled={loading}
             />
             {errors.email && <div className="form-error">{errors.email}</div>}
           </div>
+          
           <div className="form-group">
             <label htmlFor="password">パスワード</label>
             <input
@@ -164,9 +187,11 @@ const Register = () => {
               className={errors.password ? 'input-error' : ''}
               minLength="6"
               required
+              disabled={loading}
             />
             {errors.password && <div className="form-error">{errors.password}</div>}
           </div>
+          
           <div className="form-group">
             <label htmlFor="password2">パスワード（確認）</label>
             <input
@@ -178,13 +203,16 @@ const Register = () => {
               className={errors.password2 ? 'input-error' : ''}
               minLength="6"
               required
+              disabled={loading}
             />
             {errors.password2 && <div className="form-error">{errors.password2}</div>}
           </div>
+          
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? '登録中...' : '登録'}
           </button>
         </form>
+        
         <p className="auth-redirect">
           既にアカウントをお持ちの場合は <Link to="/login">こちらからログイン</Link>
         </p>
