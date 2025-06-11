@@ -1,19 +1,9 @@
-// client/src/context/AuthContext.js - 改良版
+// client/src/context/AuthContext.js - 修正版
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
-const AuthContext = createContext({
-  user: null,
-  token: null,
-  isAuthenticated: false,
-  loading: true,
-  error: null,
-  register: () => {},
-  login: () => {},
-  logout: () => {},
-  updateProfile: () => {},
-  updatePassword: () => {}
-});
+// 初期値を持ったコンテキストを作成
+const AuthContext = createContext();
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -30,154 +20,131 @@ export const AuthProvider = ({ children }) => {
   const setAuthToken = (token) => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      console.log('Auth token set in axios headers');
+      localStorage.setItem('token', token);
     } else {
       delete axios.defaults.headers.common['Authorization'];
-      console.log('Auth token removed from axios headers');
+      localStorage.removeItem('token');
     }
   };
+
+  // 初期化時にトークンをセット
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setAuthToken(storedToken);
+      setToken(storedToken);
+    }
+  }, []);
 
   // ユーザー情報の読み込み
   useEffect(() => {
     const loadUser = async () => {
-      console.log('AuthContext: Starting user load process');
-      console.log('AuthContext: Token from localStorage:', token ? 'exists' : 'not found');
-      
       if (token) {
-        setAuthToken(token);
         try {
-          console.log('AuthContext: Loading user data with token...');
+          console.log('Loading user data with token...');
           const res = await axios.get('/api/auth/me');
-          console.log('AuthContext: User data loaded successfully:', res.data.user?.username);
+          console.log('User data loaded:', res.data);
           
           setUser(res.data.user);
           setIsAuthenticated(true);
           setError(null);
-          console.log('AuthContext: User authentication state updated to true');
         } catch (err) {
-          console.error('AuthContext: Failed to load user:', err);
-          console.log('AuthContext: Clearing invalid token');
-          
-          // 無効なトークンの場合はクリア
-          localStorage.removeItem('token');
+          console.error('Failed to load user:', err);
+          // トークンが無効な場合はクリア
+          setAuthToken(null);
           setToken(null);
           setUser(null);
           setIsAuthenticated(false);
-          setAuthToken(null);
+          setError('認証の有効期限が切れています');
         }
-      } else {
-        console.log('AuthContext: No token found, user not authenticated');
-        setIsAuthenticated(false);
-        setUser(null);
       }
-      
       setLoading(false);
-      console.log('AuthContext: Initial authentication check completed');
     };
 
     loadUser();
   }, [token]);
 
-  // API URL の設定
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      axios.defaults.baseURL = 'http://localhost:3000';
-      console.log('AuthContext: Development mode - API base URL set to localhost:3000');
-    }
-  }, []);
-
   // ユーザー登録
   const register = async (formData) => {
     try {
-      console.log('AuthContext: Sending registration request...');
+      console.log('Sending registration request...');
+      setLoading(true);
       setError(null);
       
       const res = await axios.post('/api/auth/register', formData);
-      console.log('AuthContext: Registration successful');
+      console.log('Registration successful:', res.data);
       
-      const { token: newToken, user: newUser } = res.data;
+      const { token: newToken, user: userData } = res.data;
       
-      // トークンと認証状態を更新
-      localStorage.setItem('token', newToken);
-      setToken(newToken);
       setAuthToken(newToken);
-      setUser(newUser);
+      setToken(newToken);
+      setUser(userData);
       setIsAuthenticated(true);
       
-      console.log('AuthContext: User registered and authenticated:', newUser.username);
-      return { success: true, data: res.data };
+      return res.data;
     } catch (err) {
-      console.error('AuthContext: Registration error:', err);
+      console.error('Registration error:', err);
       const errorMessage = err.response?.data?.message || 'ユーザー登録に失敗しました';
       setError(errorMessage);
-      return { success: false, message: errorMessage };
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   // ログイン
   const login = async (formData) => {
     try {
-      console.log('AuthContext: Sending login request...');
+      console.log('Sending login request...');
+      setLoading(true);
       setError(null);
       
       const res = await axios.post('/api/auth/login', formData);
-      console.log('AuthContext: Login API response received');
+      console.log('Login successful:', res.data);
       
-      const { token: newToken, user: newUser } = res.data;
+      const { token: newToken, user: userData } = res.data;
       
-      // トークンと認証状態を更新
-      localStorage.setItem('token', newToken);
-      setToken(newToken);
       setAuthToken(newToken);
-      setUser(newUser);
+      setToken(newToken);
+      setUser(userData);
       setIsAuthenticated(true);
       
-      console.log('AuthContext: User logged in and authenticated:', newUser.username);
-      console.log('AuthContext: isAuthenticated set to true');
-      
-      return { success: true, data: res.data };
+      return res.data;
     } catch (err) {
-      console.error('AuthContext: Login error:', err);
+      console.error('Login error:', err);
       const errorMessage = err.response?.data?.message || 'ログインに失敗しました';
       setError(errorMessage);
-      return { success: false, message: errorMessage };
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   // ログアウト
   const logout = () => {
-    console.log('AuthContext: Logging out user');
-    
-    localStorage.removeItem('token');
-    setToken(null);
+    console.log('Logging out...');
     setAuthToken(null);
+    setToken(null);
     setUser(null);
     setIsAuthenticated(false);
     setError(null);
-    
-    console.log('AuthContext: User logged out, isAuthenticated set to false');
   };
 
   // プロフィール更新
   const updateProfile = async (formData) => {
     try {
-      console.log('AuthContext: Sending profile update request...');
-      
+      console.log('Updating profile...');
       const res = await axios.put('/api/users/update', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
-      console.log('AuthContext: Profile update successful');
-      
-      // ユーザー情報を更新
       setUser(res.data.data);
       setError(null);
-      
-      return { success: true, data: res.data };
+      return { success: true, data: res.data.data };
     } catch (err) {
-      console.error('AuthContext: Profile update error:', err);
+      console.error('Profile update error:', err);
       const errorMessage = err.response?.data?.message || 'プロフィール更新に失敗しました';
       setError(errorMessage);
       return { success: false, message: errorMessage };
@@ -185,37 +152,25 @@ export const AuthProvider = ({ children }) => {
   };
 
   // パスワード更新
-  const updatePassword = async (passwordData) => {
+  const updatePassword = async (formData) => {
     try {
-      console.log('AuthContext: Sending password update request...');
+      console.log('Updating password...');
+      const res = await axios.put('/api/users/update-password', formData);
       
-      const res = await axios.put('/api/users/update-password', passwordData);
-      
-      console.log('AuthContext: Password update successful');
       setError(null);
-      
       return { success: true, data: res.data };
     } catch (err) {
-      console.error('AuthContext: Password update error:', err);
+      console.error('Password update error:', err);
       const errorMessage = err.response?.data?.message || 'パスワード更新に失敗しました';
       setError(errorMessage);
       return { success: false, message: errorMessage };
     }
   };
 
-  // デバッグ用のuseEffect
-  useEffect(() => {
-    console.log('AuthContext: Authentication state changed:', {
-      isAuthenticated,
-      user: user?.username || 'No user',
-      loading
-    });
-  }, [isAuthenticated, user, loading]);
-
   // コンテキストで提供する値
   const value = {
     user,
-    currentUser: user, // Profile.jsで使用されているプロパティ名に対応
+    currentUser: user, // 他のコンポーネントとの互換性のため
     token,
     isAuthenticated,
     loading,
@@ -227,5 +182,9 @@ export const AuthProvider = ({ children }) => {
     updatePassword
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

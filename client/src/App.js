@@ -1,5 +1,5 @@
 
-// client/src/App.js - デバッグ版
+// client/src/App.js - 修正版
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -35,34 +35,34 @@ function App() {
   
   // 認証コンテキストが利用可能か確認
   if (!auth) {
-    console.error('App: Auth context is not available');
-    return <div>Error: Auth context is not available</div>;
-  }
-  
-  const { loading, isAuthenticated, user } = auth;
-
-  // デバッグ情報をコンソールに出力
-  console.log('App: Current auth state:', {
-    loading,
-    isAuthenticated,
-    user: user?.username || 'No user'
-  });
-
-  if (loading) {
-    console.log('App: Authentication is loading');
+    console.error('Auth context is not available');
     return (
-      <div className="App">
-        <Spinner text="アプリケーションを読み込み中..." />
+      <div className="error-container">
+        <h1>アプリケーションエラー</h1>
+        <p>認証システムの初期化に失敗しました。ページを再読み込みしてください。</p>
       </div>
     );
   }
+  
+  const { loading, error } = auth;
 
-  console.log('App: Rendering application with auth state:', isAuthenticated);
+  if (loading) {
+    return (
+      <div className="App">
+        <Spinner text="アプリケーションを読み込み中..." overlay={true} />
+      </div>
+    );
+  }
 
   return (
     <div className="App">
       <Navbar />
       <main className="container">
+        {error && (
+          <div className="alert alert-danger">
+            {error}
+          </div>
+        )}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
