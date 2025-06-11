@@ -1,5 +1,5 @@
 
-/* client/src/pages/Profile.css - 修正版 */
+/* client/src/pages/Profile.css - レイアウト修正版 */
 .profile-container {
   width: 100%;
   max-width: 800px;
@@ -28,6 +28,7 @@
   color: #666;
   font-weight: 500;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .profile-tab.active {
@@ -46,9 +47,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* プロフィール画像セクション - 固定幅でレイアウト崩れを防ぐ */
 .profile-image-upload {
   text-align: center;
   margin-bottom: 2rem;
+  min-height: 250px; /* 最小高さを設定 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-image-preview {
@@ -63,6 +70,7 @@
   justify-content: center;
   border: 3px solid var(--primary-color);
   position: relative;
+  flex-shrink: 0; /* サイズを固定 */
 }
 
 .profile-image-preview img {
@@ -76,16 +84,45 @@
   color: #ccc;
 }
 
+/* ボタンコンテナを固定幅にして他の要素に影響されないようにする */
 .profile-image-actions {
   display: flex;
   justify-content: center;
   gap: 1rem;
   margin-bottom: 0.5rem;
+  width: 100%;
+  max-width: 300px; /* 最大幅を制限 */
+  flex-wrap: wrap; /* 必要に応じて折り返し */
+}
+
+.profile-image-actions button,
+.profile-image-actions label {
+  flex: none; /* フレックスで伸縮しないようにする */
+  min-width: 120px; /* 最小幅を保証 */
+  padding: 0.6rem 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-image-actions button:hover,
+.profile-image-actions label:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* フォーム要素の固定レイアウト */
+.profile-form,
+.password-form {
+  width: 100%;
+  max-width: 500px; /* フォームの最大幅を制限 */
+  margin: 0 auto; /* 中央揃え */
 }
 
 .profile-form .form-group,
 .password-form .form-group {
   margin-bottom: 1.5rem;
+  width: 100%;
 }
 
 .profile-form label,
@@ -94,6 +131,7 @@
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: #333;
+  width: 100%;
 }
 
 .profile-form input,
@@ -105,6 +143,8 @@
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  box-sizing: border-box; /* パディングを含めたサイズ計算 */
+  min-width: 0; /* 親コンテナの幅を超えないようにする */
 }
 
 .profile-form input:focus,
@@ -128,6 +168,7 @@
   font-size: 0.85rem;
   margin-top: 0.3rem;
   display: block;
+  width: 100%;
 }
 
 .form-text {
@@ -135,8 +176,10 @@
   margin-top: 0.3rem;
   color: #666;
   font-size: 0.85rem;
+  width: 100%;
 }
 
+/* ボタンスタイルの固定 */
 .profile-form button,
 .password-form button {
   width: 100%;
@@ -144,12 +187,35 @@
   margin-top: 1rem;
   font-size: 1rem;
   font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .profile-form button:disabled,
 .password-form button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.profile-form button:not(:disabled):hover,
+.password-form button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 隠しファイル入力 */
+.hidden-file-input {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
 }
 
 /* プロフィール画像のホバーエフェクト */
@@ -160,23 +226,29 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   transition: opacity 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  border-radius: 50%;
 }
 
 .profile-image-preview:hover::after {
   opacity: 1;
-  content: '📷';
+  content: '📷 変更';
+  font-size: 0.9rem;
 }
 
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
+  .profile-container {
+    padding: 0.5rem;
+  }
+
   .profile-tabs {
     flex-direction: column;
     border-bottom: none;
@@ -187,26 +259,50 @@
     margin-bottom: 0.5rem;
     border-radius: 4px;
     text-align: center;
+    padding: 1rem;
   }
   
   .profile-tab.active {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
-  }
-  
-  .profile-image-actions {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .profile-image-actions button {
-    width: 200px;
-    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--primary-color);
   }
   
   .profile-content {
     padding: 1.5rem;
+  }
+
+  .profile-image-actions {
+    flex-direction: column;
+    align-items: center;
+    max-width: 200px;
+  }
+  
+  .profile-image-actions button,
+  .profile-image-actions label {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-form,
+  .password-form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-image-preview {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-image-placeholder {
+    font-size: 3rem;
+  }
+
+  .profile-content {
+    padding: 1rem;
   }
 }
 
@@ -223,5 +319,11 @@
 }
 
 .profile-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* タブコンテンツのアニメーション */
+.profile-tab-content,
+.password-tab-content {
   animation: fadeIn 0.3s ease-out;
 }

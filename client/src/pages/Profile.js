@@ -1,3 +1,4 @@
+// client/src/pages/Profile.js - レイアウト改良版
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Alert from '../components/common/Alert';
@@ -89,8 +90,22 @@ const Profile = () => {
     }
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
+  const triggerFileInput = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const removeProfileImage = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setProfileImage(null);
+    setProfilePreview('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const validateProfileForm = () => {
@@ -232,12 +247,14 @@ const Profile = () => {
         <button 
           className={`profile-tab ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveTab('profile')}
+          type="button"
         >
           プロフィール
         </button>
         <button 
           className={`profile-tab ${activeTab === 'password' ? 'active' : ''}`}
           onClick={() => setActiveTab('password')}
+          type="button"
         >
           パスワード変更
         </button>
@@ -249,7 +266,7 @@ const Profile = () => {
         {activeTab === 'profile' ? (
           <div className="profile-tab-content">
             <div className="profile-image-upload">
-              <div className="profile-image-preview">
+              <div className="profile-image-preview" onClick={triggerFileInput}>
                 {profilePreview ? (
                   <img 
                     src={profilePreview} 
@@ -261,18 +278,36 @@ const Profile = () => {
                   </div>
                 )}
               </div>
+              
               <div className="profile-image-actions">
-                <button type="button" className="btn btn-secondary" onClick={triggerFileInput}>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={triggerFileInput}
+                  disabled={loading}
+                >
                   画像を変更
                 </button>
-                <input 
-                  type="file" 
-                  ref={fileInputRef}
-                  onChange={handleImageChange}
-                  accept="image/jpeg,image/jpg,image/png,image/webp"
-                  style={{ display: 'none' }}
-                />
+                {profilePreview && (
+                  <button 
+                    type="button" 
+                    className="btn btn-outline" 
+                    onClick={removeProfileImage}
+                    disabled={loading}
+                  >
+                    画像を削除
+                  </button>
+                )}
               </div>
+              
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                className="hidden-file-input"
+              />
+              
               <small className="form-text">
                 JPEG、PNG、WEBP形式（最大2MB）
               </small>
@@ -288,6 +323,7 @@ const Profile = () => {
                   value={profileData.username}
                   onChange={handleProfileChange}
                   className={errors.username ? 'input-error' : ''}
+                  disabled={loading}
                   required
                 />
                 {errors.username && <div className="form-error">{errors.username}</div>}
@@ -302,6 +338,7 @@ const Profile = () => {
                   value={profileData.email}
                   onChange={handleProfileChange}
                   className={errors.email ? 'input-error' : ''}
+                  disabled={loading}
                   required
                 />
                 {errors.email && <div className="form-error">{errors.email}</div>}
@@ -316,6 +353,7 @@ const Profile = () => {
                   onChange={handleProfileChange}
                   rows="4"
                   placeholder="自己紹介を入力してください..."
+                  disabled={loading}
                 />
                 <small className="form-text">
                   趣味や興味について書いてみましょう
@@ -339,6 +377,7 @@ const Profile = () => {
                   value={passwordData.currentPassword}
                   onChange={handlePasswordChange}
                   className={errors.currentPassword ? 'input-error' : ''}
+                  disabled={loading}
                   required
                 />
                 {errors.currentPassword && <div className="form-error">{errors.currentPassword}</div>}
@@ -353,6 +392,7 @@ const Profile = () => {
                   value={passwordData.newPassword}
                   onChange={handlePasswordChange}
                   className={errors.newPassword ? 'input-error' : ''}
+                  disabled={loading}
                   required
                 />
                 {errors.newPassword && <div className="form-error">{errors.newPassword}</div>}
@@ -370,6 +410,7 @@ const Profile = () => {
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
                   className={errors.confirmPassword ? 'input-error' : ''}
+                  disabled={loading}
                   required
                 />
                 {errors.confirmPassword && <div className="form-error">{errors.confirmPassword}</div>}
